@@ -1,0 +1,73 @@
+@import './reset.scss';
+@import './mixin.scss';
+@import './variable';
+
+//text|bg color
+@each $key,$color in $colors {
+  .text-#{$key} {
+    color: $color
+  }
+  .bg-#{$key} {
+    background-color: $color
+  }
+}
+
+// text-align
+@each $var in (left, center, right) {
+  .text-#{$var} {
+    text-align: $var;
+  }
+}
+
+@each $key, $value in $font-sizes {
+  .fs-#{$key} {
+    font-size: pxtorem($value);
+  }
+}
+
+// jc, ai
+@each $key, $value in $flex-jc {
+  .jc-#{$key} {
+    justify-content: $value;
+  }
+}
+@each $key, $value in $flex-ai {
+  .ai-#{$key} {
+    align-items: $value
+  }
+}
+
+@each $typekey, $type in $spacing-type {
+  @each $sizekey, $size in $spacing-size {
+    // .m-1: { margin: 0.25 * 1rem }
+    .#{$typekey}-#{$sizekey} {
+      #{$type}: pxtorem($size);
+    }
+  }
+  @each $sizekey, $size in $spacing-size {
+    // .mx-1: { margin: 0.25 * 1rem 0.25 * 1rem }
+    .#{$typekey}x-#{$sizekey} {
+      #{$type}-left: pxtorem($size);
+      #{$type}-right: pxtorem($size);
+    }
+    .#{$typekey}y-#{$sizekey} {
+      #{$type}-top: pxtorem($size);
+      #{$type}-bottom: pxtorem($size);
+    }
+  }
+  @each $directionkey, $direction in $spacing-direction {
+    @each $sizekey, $size in $spacing-size {
+      // .mr-1: { margin-left: 0.25 * 1rem }
+      .#{$typekey}#{$directionkey}-#{$sizekey} {
+        #{$type}-#{$direction}: pxtorem($size);
+      }
+    }
+  }
+}
+
+// border
+@each $var in (left, right, top, bottom) {
+  .border-#{$var} {
+    border-#{$var}: 1px solid map-get($colors, 'white-1');
+  }
+}

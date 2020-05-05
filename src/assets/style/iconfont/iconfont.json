@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "5257340",
+      "name": "头颈外科-声音嘶哑",
+      "font_class": "toujingwaike-shengyinsiya",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "2155506",
+      "name": "日历",
+      "font_class": "rili",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "4608973",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
       "icon_id": "152423",
       "name": "问号",
       "font_class": "qm",

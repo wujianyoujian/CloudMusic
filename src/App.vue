@@ -1,7 +1,5 @@
 <template>
   <div id="app" class="w-100 h-100">
-    <span class="iconfont icon-zanting"></span>
-    <p class="fs-sm">nihao1</p>
     <router-view/>
   </div>
 </template>
@@ -18,4 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style lang="scss">
+#app {
+  overflow: hidden;
+}
 </style>

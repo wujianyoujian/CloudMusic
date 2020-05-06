@@ -26,7 +26,7 @@ export default {
       BannerImgs: []
     }
   },
-  mounted () {
+  created () {
     this.getchBannerImg()
   },
   methods: {
@@ -45,6 +45,7 @@ export default {
 .Banner {
   img {
     border-radius: pxtorem(5);
+    height: pxtorem(140);
   }
   .swiper-pagination {
     .swiper-pagination-bullet {

@@ -71,3 +71,7 @@
     border-#{$var}: 1px solid map-get($colors, 'white-1');
   }
 }
+
+span, p {
+  font-size: pxtorem(16);
+}

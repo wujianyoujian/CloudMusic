@@ -41,12 +41,25 @@ export default {
           text: '账号'
         }
       ],
-      menu_active: 0
+      menu_active: 0,
+      pages: [
+        'Find',
+        'Video',
+        'Mine',
+        'Yuncun',
+        'Account'
+      ]
     }
   },
   methods: {
     select_menu (index) {
+      if (index === this.menu_active && (index === 0 || index === 1 || index === 2)) {
+        // 如果是发现页和视频页, 再次点击就刷新当前页的数据
+        return null
+      }
+      console.log(index)
       this.menu_active = index
+      this.$router.push(`/${this.pages[index]}`)
     }
   }
 }

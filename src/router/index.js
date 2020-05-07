@@ -1,20 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import VueAwesomeSwiper from 'vue-awesome-swiper'
-import 'swiper/css/swiper.css'
-import http from '../http'
+import Find from '../views/Find/Find.vue'
+import Account from '../views/Accound/Account.vue'
+import Login from '../views/Accound/Login.vue'
 
 Vue.use(VueRouter)
-Vue.use(VueAwesomeSwiper)
-
-Vue.prototype.$http = http
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    redirect: '/Find',
+    children: [
+      { path: '/Find', component: Find },
+      { path: '/Account', component: Account }
+    ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   }
 ]
 

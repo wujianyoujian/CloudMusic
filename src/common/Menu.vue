@@ -100,6 +100,5 @@ export default {
   }
 }
 .menu_wrapper::after {
-  filter: blur(20px);
 }
 </style>

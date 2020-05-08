@@ -16,7 +16,7 @@
         <Banner></Banner>
         <div class="tab_wrapper d-flex m-2 jc-between">
           <div class="tab d-flex d-column" v-for="(item, index) in tab_info" :key="index">
-            <div class="icon-wrapper mb-1">
+            <div class="icon-wrapper mb-1" @click=showPage(index)>
               <span class="fs-xxl text-white" :class="item.class"></span>
             </div>
             <span class="fs-xxs text-grey-1">{{item.text}}</span>
@@ -30,7 +30,7 @@
 
 <script>
 import Bscroll from 'better-scroll'
-import Banner from '../../components/Banner'
+import Banner from '../../common/Banner'
 export default {
   name: 'Find',
   data () {
@@ -71,10 +71,13 @@ export default {
         click: true
       })
     },
-    FetchRecommendSong () {
-      this.$http.get('/recommend/songs').then((res) => {
-        console.log(res)
-      })
+    showPage (index) {
+      if (index === 0) {
+        this.showRecommendPage()
+      }
+    },
+    showRecommendPage () {
+      this.$router.push('/RecommendSong')
     }
   }
 }
@@ -82,8 +85,9 @@ export default {
 <style lang='scss'>
 @import '@scss/_variable.scss';
 @import '@scss/mixin.scss';
-.home {
+.Find {
   overflow-y: auto;
+  height: 100%;
   .top {
     .input_wrapper {
       position: relative;
@@ -124,7 +128,6 @@ export default {
     }
     .test {
       height: 1000px;
-      background: #ff0;
     }
   }
 }

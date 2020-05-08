@@ -1,6 +1,7 @@
 @import './reset.scss';
 @import './mixin.scss';
 @import './variable';
+@import './animation.scss';
 
 //text|bg color
 @each $key,$color in $colors {

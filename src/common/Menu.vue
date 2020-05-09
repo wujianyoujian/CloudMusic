@@ -71,9 +71,9 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+  background: rgb(255, 255, 255);
   z-index: 99;
-  background: rgba(238, 238, 238, 0.8);
-  box-sizing: border-box;
+  border-top: 1px solid rgb(240, 240, 240);
   .menu {
     flex: 0 1 pxtorem(30);
     text-align: center;
@@ -99,6 +99,5 @@ export default {
     }
   }
 }
-.menu_wrapper::after {
-}
+
 </style>

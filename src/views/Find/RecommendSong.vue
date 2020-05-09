@@ -26,8 +26,11 @@
           </div>
           <div class="ul_wrapper" ref="SongList">
             <ul class="px-3">
+              <div class="d-flex jc-center" v-show="RecommendSongs == 0">
+                <img src="../../assets/Loading.gif" alt="">
+              </div>
               <li class="song d-flex ai-center" v-for="(song, index) in RecommendSongs" :key="index">
-                <img :src="song.album.blurPicUrl" alt="" class="mr-2">
+                <img :src="song.album.blurPicUrl.replace()"  alt="" class="mr-2">
                 <div class="song_info flex-1">
                   <div>
                     <span>{{song.album.name}}</span>
@@ -64,10 +67,16 @@ export default {
   },
   methods: {
     FetchRecommendSong () {
-      console.log(1)
       this.$http.get('/recommend/songs').then((res) => {
         if (res.status === 200) {
-          this.RecommendSongs = res.data.recommend
+          const data = res.data.recommend
+          // 修改请求图片的大小
+          data.forEach((song) => {
+            song.album.blurPicUrl = song.album.blurPicUrl + '?param=40y40'
+          })
+          setTimeout(() => {
+            this.RecommendSongs = data
+          }, 200)
         }
       })
     },
@@ -122,6 +131,8 @@ export default {
         position: fixed;
         top: pxtorem(210);
         bottom: 0;
+        left: 0;
+        right: 0;
         z-index: 20;
         ul {
           padding-bottom: pxtorem(78);

@@ -22,6 +22,12 @@
             <span class="fs-xxs text-grey-1">{{item.text}}</span>
           </div>
         </div>
+        <div>
+          <div>
+            <span>为你精挑细选</span>
+            <span>查看更多</span>
+          </div>
+        </div>
         <div class="test"></div>
       </div>
     </div>
@@ -64,6 +70,7 @@ export default {
   },
   mounted () {
     this._initScroll()
+    this.FetchRecommendGedan()
   },
   methods: {
     _initScroll () {
@@ -74,10 +81,22 @@ export default {
     showPage (index) {
       if (index === 0) {
         this.showRecommendPage()
+      } else if (index === 1) {
+        this.showGedanPage()
       }
     },
     showRecommendPage () {
       this.$router.push('/RecommendSong')
+    },
+    showGedanPage () {
+      this.$router.push('/Gedan')
+    },
+    async FetchRecommendGedan () {
+      await this.$http.get('/personalized').then(res => {
+        if (res.status === 200) {
+          console.log(res.data)
+        }
+      })
     }
   }
 }

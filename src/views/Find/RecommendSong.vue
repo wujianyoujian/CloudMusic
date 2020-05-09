@@ -1,15 +1,15 @@
 <template>
   <transition name='slide-right'>
     <div class="RecommendSong">
-      <div class="header">
+      <div class="header" :style="{backgroundImage: headerImg}">
         <div class="top px-2 py-3 d-flex ai-center jc-between">
           <span class="iconfont icon-arrow-lift text-white fs-xxxl" @click="hide"></span>
           <span class="iconfont icon-tubiaozhizuomoban text-white fs-xxl"></span>
         </div>
         <div class="SongDate text-white mb-2 px-3">
-          <span class="fs-xxxl font-w">08</span>
+          <span class="fs-xxxl font-w">{{date}}</span>
           <span class="px-0">/</span>
-          <span>05</span>
+          <span>{{month}}</span>
         </div>
       </div>
       <div class="SongList_wrapper">
@@ -54,11 +54,22 @@
 
 <script>
 import Bscroll from 'better-scroll'
+const time = new Date()
 export default {
   name: 'RecommendSong',
   data () {
     return {
-      RecommendSongs: []
+      RecommendSongs: [],
+      headerImg: ''
+    }
+  },
+  computed: {
+    date () {
+      return time.getDate() < 10 ? '0' + time.getDate() : time.getDate()
+    },
+    month () {
+      const time = new Date()
+      return (time.getMonth() + 1) < 10 ? '0' + (time.getMonth() + 1) : (time.getMonth() + 1)
     }
   },
   mounted () {
@@ -74,6 +85,8 @@ export default {
           data.forEach((song) => {
             song.album.blurPicUrl = song.album.blurPicUrl + '?param=40y40'
           })
+          const imgIndex = Math.floor(Math.random() * 30)
+          this.headerImg = `url(${data[imgIndex].album.blurPicUrl.replace('?param=40y40', '')})`
           setTimeout(() => {
             this.RecommendSongs = data
           }, 200)
@@ -107,8 +120,7 @@ export default {
   .header {
     width: 100%;
     height: 30%;
-    background: url(http://p1.music.126.net/TOwuh0SqyudWAq9IMtPTXw==/109951164971499409.jpg);
-    background-position: center right;
+    background-position: center center;
     background-size: cover;
     position: fixed;
     z-index: 22;

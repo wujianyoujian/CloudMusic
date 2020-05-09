@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Find from '../views/Find/Find.vue'
 import Account from '../views/Accound/Account.vue'
 import Login from '../views/Accound/Login.vue'
 
@@ -14,9 +13,22 @@ const routes = [
     component: Home,
     redirect: '/Find',
     children: [
-      { path: '/Find', component: Find, meta: { animation_form: 'slide-right' } },
+      {
+        path: '/Find',
+        component: () => import('../views/Find/Find.vue'),
+        meta: { animation_form: 'slide-right' }
+      },
       { path: '/Account', component: Account },
-      { path: '/RecommendSong', component: () => import('../views/Find/RecommendSong.vue'), meta: { animation_form: 'slide-right' } }
+      {
+        path: '/RecommendSong',
+        component: () => import('../views/Find/RecommendSong.vue'),
+        meta: { animation_form: 'slide-right' }
+      },
+      {
+        path: '/Gedan',
+        component: () => import('../views/Find/GedanList.vue'),
+        meta: { animation_form: 'slide-right' }
+      }
     ]
   },
   {

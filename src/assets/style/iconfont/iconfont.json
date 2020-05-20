@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "14313194",
+      "name": "下载",
+      "font_class": "xiazai1",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "34926",
+      "name": "vip",
+      "font_class": "vip",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
+      "icon_id": "1008466",
+      "name": "分享1",
+      "font_class": "fenxiang1",
+      "unicode": "e685",
+      "unicode_decimal": 59013
+    },
+    {
+      "icon_id": "2154283",
+      "name": "单曲循环_32",
+      "font_class": "danquxunhuan",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "4251748",
+      "name": "评论",
+      "font_class": "pinglun",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
       "icon_id": "5257340",
       "name": "头颈外科-声音嘶哑",
       "font_class": "toujingwaike-shengyinsiya",

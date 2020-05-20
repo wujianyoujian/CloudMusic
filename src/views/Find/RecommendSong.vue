@@ -32,14 +32,13 @@
               <li class="song d-flex ai-center" v-for="(song, index) in RecommendSongs" :key="index">
                 <img :src="song.album.blurPicUrl.replace()"  alt="" class="mr-2">
                 <div class="song_info flex-1">
-                  <div>
-                    <span>{{song.album.name}}</span>
-                    <span></span>
+                  <div class="song_name text-h">
+                    {{song.album.name}}
                   </div>
-                  <div class="text-grey-1 mt-1">
-                    <span class="fs-xxs">{{song.album.artists[0].name}}</span>
-                    <span class="fs-xxs px-0">-</span>
-                    <span class="fs-xxs">{{song.album.name}}</span>
+                  <div class="text-grey-1 mt-1 text-h song_detail fs-xxs">
+                    {{song.album.artists[0].name}}
+                    -
+                    {{song.album.name}}
                   </div>
                 </div>
                 <span class="song_option iconfont icon-xuanxiang fs-xl"></span>
@@ -120,7 +119,7 @@ export default {
   .header {
     width: 100%;
     height: 30%;
-    background-position: center center;
+    background-position: top center;
     background-size: cover;
     position: fixed;
     z-index: 22;
@@ -154,6 +153,14 @@ export default {
               width: pxtorem(40);
               height: pxtorem(40);
               border-radius: pxtorem(4);
+            }
+            .song_info {
+              .song_name {
+                width: pxtorem(252);
+              }
+              .song_detail {
+                width: pxtorem(252);
+              }
             }
           }
         }

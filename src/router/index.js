@@ -35,7 +35,13 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/music/:id',
+    name: 'MusicPlay',
+    component: () => import('../views/MusicPlay/MusicPlay.vue')
   }
+
 ]
 
 const router = new VueRouter({

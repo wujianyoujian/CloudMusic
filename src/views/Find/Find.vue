@@ -70,7 +70,7 @@ export default {
   },
   mounted () {
     this._initScroll()
-    this.FetchRecommendGedan()
+    // this.FetchRecommendGedan()
   },
   methods: {
     _initScroll () {
@@ -92,6 +92,7 @@ export default {
       this.$router.push('/Gedan')
     },
     async FetchRecommendGedan () {
+      // 获取推荐歌单
       await this.$http.get('/personalized').then(res => {
         if (res.status === 200) {
           console.log(res.data)

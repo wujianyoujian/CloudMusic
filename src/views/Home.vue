@@ -1,9 +1,9 @@
 <template>
   <div class="home w-100 h-100">
     <Menu></Menu>
-    <transition :name="transitionName">
+    <keep-alive>
       <router-view></router-view>
-    </transition>
+    </keep-alive>
   </div>
 </template>
 

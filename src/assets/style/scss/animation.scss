@@ -5,5 +5,5 @@
   transform: translate3d(0, 0, 0);
 }
 .slide-right-enter-active, .slide-right-leave-active {
-  transition: all .5s linear;
+  transition: all .2s ease-in-out;
 }

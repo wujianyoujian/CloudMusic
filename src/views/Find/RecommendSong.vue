@@ -1,5 +1,5 @@
 <template>
-  <transition name='slide-right'>
+  <div class="w-100 h-100">
     <div class="RecommendSong">
       <div class="header" :style="{backgroundImage: headerImg}">
         <div class="top px-2 py-3 d-flex ai-center jc-between">
@@ -29,11 +29,13 @@
               <div class="d-flex jc-center" v-show="RecommendSongs == 0">
                 <img src="../../assets/Loading.gif" alt="">
               </div>
-              <li class="song d-flex ai-center" v-for="(song, index) in RecommendSongs" :key="index">
-                <img :src="song.album.blurPicUrl.replace()"  alt="" class="mr-2">
+              <li class="song d-flex ai-center"
+               v-for="(song, index) in RecommendSongs" :key="index"
+               @click="PlaySong(index)">
+                <img :src="song.album.blurPicUrl"  alt="" class="mr-2">
                 <div class="song_info flex-1">
                   <div class="song_name text-h">
-                    {{song.album.name}}
+                    {{song.name}}
                   </div>
                   <div class="text-grey-1 mt-1 text-h song_detail fs-xxs">
                     {{song.album.artists[0].name}}
@@ -48,18 +50,21 @@
         </div>
       </div>
     </div>
-  </transition>
+    <MusicPlay :index="MusicIndex" :PlaySongList="RecommendSongs" ref="MusicPlay"></MusicPlay>
+  </div>
 </template>
 
 <script>
 import Bscroll from 'better-scroll'
+import MusicPlay from '../MusicPlay/MusicPlay'
 const time = new Date()
 export default {
   name: 'RecommendSong',
   data () {
     return {
       RecommendSongs: [],
-      headerImg: ''
+      headerImg: '',
+      MusicIndex: 0
     }
   },
   computed: {
@@ -70,6 +75,9 @@ export default {
       const time = new Date()
       return (time.getMonth() + 1) < 10 ? '0' + (time.getMonth() + 1) : (time.getMonth() + 1)
     }
+  },
+  components: {
+    MusicPlay
   },
   mounted () {
     this.FetchRecommendSong()
@@ -88,7 +96,7 @@ export default {
           this.headerImg = `url(${data[imgIndex].album.blurPicUrl.replace('?param=40y40', '')})`
           setTimeout(() => {
             this.RecommendSongs = data
-          }, 200)
+          }, 100)
         }
       })
     },
@@ -102,6 +110,10 @@ export default {
     },
     hide () {
       this.$router.push('/Find')
+    },
+    PlaySong (index) {
+      this.MusicIndex = index
+      this.$refs.MusicPlay.show()
     }
   }
 }

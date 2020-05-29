@@ -4,7 +4,7 @@
       <div class="header" :style="{backgroundImage: headerImg}">
         <div class="top px-2 py-3 d-flex ai-center jc-between">
           <span class="iconfont icon-arrow-lift text-white fs-xxxl" @click="hide"></span>
-          <span class="iconfont icon-tubiaozhizuomoban text-white fs-xxl"></span>
+          <span class="iconfont icon-tubiaozhizuomoban text-white fs-xxl" @click="enter_playmusic"></span>
         </div>
         <div class="SongDate text-white mb-2 px-3">
           <span class="fs-xxxl font-w">{{date}}</span>
@@ -64,7 +64,7 @@ export default {
     return {
       RecommendSongs: [],
       headerImg: '',
-      MusicIndex: 0
+      MusicIndex: -1
     }
   },
   computed: {
@@ -112,8 +112,14 @@ export default {
       this.$router.push('/Find')
     },
     PlaySong (index) {
+      // 从歌单当中点击播放某一首
       this.MusicIndex = index
       this.$refs.MusicPlay.show()
+    },
+    enter_playmusic () {
+      if (this.MusicIndex >= 0) {
+        this.$refs.MusicPlay.show()
+      }
     }
   }
 }
@@ -130,8 +136,9 @@ export default {
   background: #fff;
   .header {
     width: 100%;
-    height: 30%;
+    height: pxtorem(200);
     background-position: top center;
+    background-repeat: no-repeat;
     background-size: cover;
     position: fixed;
     z-index: 22;

@@ -2,16 +2,16 @@
   <transition name="slide-right">
     <div class="MusicPlay" v-show="ifshowMusicPlay">
       <div class="Page py-2 px-1">
-        <div class="top d-flex text-white ai-center">
+        <div class="top d-flex text-white ai-center jc-between">
           <span class="iconfont icon-arrow-lift fs-xxxl" @click="hide"></span>
-          <div class="song_info flex-1 ml-2 text-center" v-if="PlaySongList.length > 0">
-            <p class="song_name">{{PlaySongList[index].name}}</p>
-            <p class="song_author fs-xxxs mt-0">{{PlaySongList[index].artists[0].name}} ></p>
+          <div class="song_info ml-2 text-center px-2" v-if="PlaySongList.length > 0 && index >= 0">
+            <p class="song_name text-h">{{PlaySongList[index].name}}</p>
+            <p class="song_author fs-xxxs mt-0 text-h">{{PlaySongList[index].artists[0].name}} ></p>
           </div>
           <span class="iconfont icon-fenxiang1 fs-xxxl"></span>
         </div>
         <div class="circle_img">
-          <img :src="PlaySongList[index].album.picUrl" alt="" v-if="PlaySongList.length !== 0">
+          <img :src="PlaySongList[currentIndex].album.picUrl" alt="" v-if="PlaySongList.length !== 0 && index >= 0">
         </div>
         <div class="operate_option d-flex jc-around">
           <span class="iconfont icon-aixin"></span>
@@ -20,16 +20,22 @@
           <span class="iconfont icon-pinglun"></span>
           <span class="iconfont icon-xuanxiang"></span>
         </div>
-        <div class="progress_bar my-3"></div>
+        <div class="progress_bar my-3 d-flex ai-center">
+          <span class="fs-xxs text-white">{{currentTime}}</span>
+          <div class="progress_bg flex-1 mx-1"></div>
+          <span class="fs-xxs text-white">{{totalTime}}</span>
+          <div></div>
+          <span></span>
+        </div>
         <div id="Broadcaster">
-          <audio :src="SongUrl" ref="song"></audio>
+          <audio :src="SongUrl" ref="song" @timeupdate="timeupdate"></audio>
           <div class="musicplay_option d-flex jc-around ai-center">
             <span class="iconfont icon-xunhuan"></span>
             <span class="iconfont icon-double-arrow-left"></span>
             <span class="iconfont"
-            :class="PlayingState ? 'icon-bofang' : 'icon-zanting'"
-            @click="play"></span>
-            <span class="iconfont icon-double-arro-right"></span>
+             :class="PlayingState ? 'icon-bofang' : 'icon-zanting'"
+             @click="play(currentIndex)"></span>
+            <span class="iconfont icon-double-arro-right" @click="nextplay"></span>
             <span class="iconfont icon-xuanxiangcharu"></span>
           </div>
         </div>
@@ -56,21 +62,48 @@ export default {
     return {
       SongUrl: '',
       ifshowMusicPlay: false,
-      PlayingState: true
+      PlayingState: true,
+      currentTime: 0,
+      totalTime: 0,
+      currentIndex: -1
     }
   },
   watch: {
     index () {
-      this.FetchMusicSong(this.PlaySongList[this.index].id)
+      if (this.index >= 0) {
+        console.log(this.index)
+        this.currentIndex = this.index + 1
+        this.FetchMusicSong(this.PlaySongList[this.currentIndex].id)
+      }
+    },
+    SongUrl () {
+      if (this.SongUrl) {
+        this.$nextTick(() => {
+          this.play(this.currentIndex)
+        })
+      }
+    },
+    currentTime () {
+      if (this.currentTime === this.totalTime) {
+        this.nextplay()
+      }
     }
   },
   computed: {
     BigImg () {
-      if (this.PlaySongList.length > 0) {
-        return `url(${this.PlaySongList[this.index].album.picUrl})`
+      if (this.PlaySongList.length > 0 && this.currentIndex >= 0) {
+        return `url(${this.PlaySongList[this.currentIndex].album.picUrl})`
       }
       return 'url(#ccc)'
     }
+    // currentIndex: {
+    //   get: function () {
+    //     return this.id
+    //   },
+    //   set: function (value) {
+    //     return value
+    //   }
+    // }
   },
   mounted () {
   },
@@ -83,14 +116,24 @@ export default {
         }
       })
     },
-    play () {
-      if (this.$refs.song.paused) {
+    play (index) {
+      if (this.currentIndex === index) {
+        if (this.$refs.song.paused) {
         // 如果是暂停, 就继续播放
-        this.$refs.song.play()
-        this.PlayingState = false
+          this.$refs.song.play().catch(error => {
+            console.log(error)
+          })
+          this.PlayingState = false
+        } else {
+          this.$refs.song.pause()
+          this.PlayingState = true
+        }
       } else {
-        this.$refs.song.pause()
-        this.PlayingState = true
+        this.FetchMusicSong(this.PlaySongList[this.currentIndex].id)
+        this.$refs.song.play().catch((error) => {
+          console.log(error)
+        })
+        this.currentIndex = index
       }
     },
     hide () {
@@ -98,6 +141,30 @@ export default {
     },
     show () {
       this.ifshowMusicPlay = true
+    },
+    timeupdate () {
+      const currentPlayTime = Math.floor(this.$refs.song.currentTime)
+      const totalPlayTime = Math.floor(this.$refs.song.duration)
+      // 分
+      let minute = currentPlayTime >= 60 ? Math.floor(currentPlayTime / 60) : '0'
+      let totalminute = totalPlayTime >= 60 ? Math.floor(totalPlayTime / 60) : '0'
+      // 秒
+      let second = currentPlayTime >= 60 ? Math.floor(currentPlayTime - minute * 60) : (currentPlayTime | 0)
+      let totalsecond = totalPlayTime >= 60 ? Math.floor(totalPlayTime - totalminute * 60) : (totalPlayTime | 0)
+      minute = minute >= 10 ? minute : '0' + minute
+      second = second >= 10 ? second : '0' + second
+      totalminute = totalminute >= 10 ? totalminute : '0' + (totalminute | null)
+      totalsecond = totalsecond >= 10 ? totalsecond : '0' + (totalsecond | null)
+      this.currentTime = `${minute}:${second}`
+      this.totalTime = `${totalminute}:${totalsecond}`
+    },
+    nextplay () {
+      // 播放下一首
+      let index = this.currentIndex + 1
+      if (index > this.PlaySongList.length) {
+        index = 0
+      }
+      this.play(index)
     }
   }
 }
@@ -119,6 +186,21 @@ export default {
     left: 0;
     right: 0;
     z-index: 120;
+    .top {
+      .song_info {
+        p {
+          width: pxtorem(250);
+        }
+      }
+    }
+    @keyframes Spin {
+      0% {
+        transform: rotate(0)
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
     .circle_img {
       margin: pxtorem(100) 0;
       display: flex;
@@ -128,6 +210,8 @@ export default {
         height: pxtorem(250);
         border-radius: 50%;
         background: #fff;
+        border: 4px solid #adadad31;
+        animation: Spin 15s linear infinite;
       }
     }
     .operate_option, .musicplay_option {
@@ -144,20 +228,22 @@ export default {
       }
     }
     .progress_bar {
-      height: pxtorem(4);
-      background: #fff;
+      .progress_bg {
+        height: pxtorem(2);
+        background: #ccc;
+      }
     }
   }
   .Mosaic_Bg {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-size: 120% 120%;
+    top: pxtorem(-100);
+    bottom: pxtorem(-100);
+    left: pxtorem(-100);
+    right: pxtorem(-100);
+    background-size: 100% 100%;
     background-position: center center;
     background-repeat: no-repeat;
-    filter: blur(12px);
+    filter: blur(20px);
     z-index: 103;
   }
   .Mosaic {
@@ -167,7 +253,7 @@ export default {
     left: 0;
     right: 0;
     z-index: 105;
-    background:rgba(0,0,0,0.4);
+    background:rgba(0,0,0,0.2);
   }
 }
 </style>

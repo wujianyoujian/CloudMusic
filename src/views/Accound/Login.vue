@@ -49,8 +49,10 @@ export default {
       console.log(this.username, this.password)
       await this.$http.get(`/login/cellphone?phone=${this.username}&password=${this.password}`).then((res) => {
         console.log(res)
-        if (res.status === 200) {
+        if (res.status === 200 && res.data.code === 200) {
           this.$router.push('/find')
+        } else {
+          alert(res.data.message)
         }
       })
     }

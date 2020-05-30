@@ -4,14 +4,14 @@
       <div class="Page py-2 px-1">
         <div class="top d-flex text-white ai-center jc-between">
           <span class="iconfont icon-arrow-lift fs-xxxl" @click="hide"></span>
-          <div class="song_info ml-2 text-center px-2" v-if="PlaySongList.length > 0 && index >= 0">
-            <p class="song_name text-h">{{PlaySongList[index].name}}</p>
-            <p class="song_author fs-xxxs mt-0 text-h">{{PlaySongList[index].artists[0].name}} ></p>
+          <div class="song_info ml-2 text-center px-2" v-if="PlaySongList.length > 0 && currentIndex >= 0">
+            <p class="song_name text-h">{{PlaySongList[currentIndex].name}}</p>
+            <p class="song_author fs-xxxs mt-0 text-h">{{PlaySongList[currentIndex].artists[0].name}} ></p>
           </div>
           <span class="iconfont icon-fenxiang1 fs-xxxl"></span>
         </div>
         <div class="circle_img">
-          <img :src="PlaySongList[currentIndex].album.picUrl" alt="" v-if="PlaySongList.length !== 0 && index >= 0">
+          <img :src="PlaySongList[currentIndex].album.picUrl" alt="" v-if="PlaySongList.length !== 0 && currentIndex >= 0">
         </div>
         <div class="operate_option d-flex jc-around">
           <span class="iconfont icon-aixin"></span>
@@ -22,7 +22,7 @@
         </div>
         <div class="progress_bar my-3 d-flex ai-center">
           <span class="fs-xxs text-white">{{currentTime}}</span>
-          <div class="progress_bg flex-1 mx-1"></div>
+          <ProgressBg class="flex-1 mx-1" :currentTime="currentTime" :totalTime="totalTime"></ProgressBg>
           <span class="fs-xxs text-white">{{totalTime}}</span>
           <div></div>
           <span></span>
@@ -31,7 +31,7 @@
           <audio :src="SongUrl" ref="song" @timeupdate="timeupdate"></audio>
           <div class="musicplay_option d-flex jc-around ai-center">
             <span class="iconfont icon-xunhuan"></span>
-            <span class="iconfont icon-double-arrow-left"></span>
+            <span class="iconfont icon-double-arrow-left" @click="preplay"></span>
             <span class="iconfont"
              :class="PlayingState ? 'icon-bofang' : 'icon-zanting'"
              @click="play(currentIndex)"></span>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import ProgressBg from './components/ProgressBg'
 export default {
   name: 'MusicPlay',
   props: {
@@ -63,16 +64,15 @@ export default {
       SongUrl: '',
       ifshowMusicPlay: false,
       PlayingState: true,
-      currentTime: 0,
-      totalTime: 0,
+      currentTime: '0',
+      totalTime: '0',
       currentIndex: -1
     }
   },
   watch: {
     index () {
       if (this.index >= 0) {
-        console.log(this.index)
-        this.currentIndex = this.index + 1
+        this.currentIndex = this.index
         this.FetchMusicSong(this.PlaySongList[this.currentIndex].id)
       }
     },
@@ -84,8 +84,11 @@ export default {
       }
     },
     currentTime () {
-      if (this.currentTime === this.totalTime) {
-        this.nextplay()
+      if (this.totalTime !== '00:00') {
+        if (this.currentTime === this.totalTime) {
+          console.log('next')
+          this.nextplay()
+        }
       }
     }
   },
@@ -96,20 +99,16 @@ export default {
       }
       return 'url(#ccc)'
     }
-    // currentIndex: {
-    //   get: function () {
-    //     return this.id
-    //   },
-    //   set: function (value) {
-    //     return value
-    //   }
-    // }
+  },
+  components: {
+    ProgressBg
   },
   mounted () {
   },
   methods: {
     async FetchMusicSong (id) {
       // 单个歌曲数据请求, 通过id号
+      console.log(id, this.currentIndex)
       await this.$http.get(`/song/url?id=${id}`).then(res => {
         if (res.status === 200 && res.data.data.length >= 1) {
           this.SongUrl = res.data.data[0].url
@@ -118,6 +117,7 @@ export default {
     },
     play (index) {
       if (this.currentIndex === index) {
+        // this.$refs.song.load()
         if (this.$refs.song.paused) {
         // 如果是暂停, 就继续播放
           this.$refs.song.play().catch(error => {
@@ -129,7 +129,8 @@ export default {
           this.PlayingState = true
         }
       } else {
-        this.FetchMusicSong(this.PlaySongList[this.currentIndex].id)
+        this.FetchMusicSong(this.PlaySongList[index].id)
+        // this.$refs.song.load()
         this.$refs.song.play().catch((error) => {
           console.log(error)
         })
@@ -161,14 +162,25 @@ export default {
     nextplay () {
       // 播放下一首
       let index = this.currentIndex + 1
-      if (index > this.PlaySongList.length) {
+      console.log(index, this.PlaySongList.length - 1)
+      if (this.currentIndex >= this.PlaySongList.length - 1) {
         index = 0
+      }
+      this.play(index)
+    },
+    preplay () {
+      // 播放上一首
+      let index = this.currentIndex - 1
+      if (index < 0) {
+        index = this.PlaySongList.length - 1
       }
       this.play(index)
     }
   }
 }
+
 </script>
+
 <style lang="scss">
 @import '@scss/mixin.scss';
 .MusicPlay {
@@ -228,10 +240,6 @@ export default {
       }
     }
     .progress_bar {
-      .progress_bg {
-        height: pxtorem(2);
-        background: #ccc;
-      }
     }
   }
   .Mosaic_Bg {

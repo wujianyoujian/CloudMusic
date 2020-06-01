@@ -21,9 +21,15 @@
           <span class="iconfont icon-xuanxiang"></span>
         </div>
         <div class="progress_bar my-3 d-flex ai-center">
-          <span class="fs-xxs text-white">{{currentTime}}</span>
-          <ProgressBg class="flex-1 mx-1" :currentTime="currentTime" :totalTime="totalTime"></ProgressBg>
-          <span class="fs-xxs text-white">{{totalTime}}</span>
+          <span class="fs-xxs mr-1 text-white">{{currentTime}}</span>
+          <ProgressBg
+           :currentTime="currentTime"
+           :totalTime="totalTime"
+           v-on:clickprogress="ClickToJump"
+           ref="progress"
+          >
+          </ProgressBg>
+          <span class="fs-xxs ml-1 text-white">{{totalTime}}</span>
           <div></div>
           <span></span>
         </div>
@@ -175,6 +181,13 @@ export default {
         index = this.PlaySongList.length - 1
       }
       this.play(index)
+    },
+    ClickToJump (offsetWidth, totalWidth) {
+      // 点击跳转, 歌曲跳转到点击的位置
+      if (this.currentTime !== '00:00') {
+        console.log((offsetWidth / totalWidth), this.$refs.song.duration)
+        this.$refs.song.currentTime = (offsetWidth / totalWidth) * this.$refs.song.duration
+      }
     }
   }
 }

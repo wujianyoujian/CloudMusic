@@ -1,6 +1,8 @@
 <template>
-  <div class="ProgressBg">
-    <div class="scrollbar" :style="{width:scrollbarWidth + '%'}">
+  <div class="ProgressBg" @click="Positioning($event)" ref="progress">
+    <div class="scrollbar"
+     :style="{width:scrollbarWidth + '%'}"
+    >
       <div class="dot"></div>
     </div>
   </div>
@@ -35,9 +37,17 @@ export default {
       second = parseInt(second)
       return minute * 60 + second
     },
-    scrollbarWidth () {
-      // const totalwidth = document.querySelector('.ProgressBg').style.width
-      return (this.currentTimeLength / this.totalTimeLength) * 100
+    scrollbarWidth: {
+      get () {
+        return (this.currentTimeLength / this.totalTimeLength) * 100
+      }
+    }
+  },
+  methods: {
+    Positioning ($event) {
+      // 为父组件定义事件, 来触发点击
+      const width = this.$refs.progress.offsetWidth
+      this.$emit('clickprogress', $event.offsetX, width)
     }
   }
 }
@@ -46,6 +56,7 @@ export default {
 <style lang='scss'>
 @import '@scss/mixin.scss';
 .ProgressBg {
+  flex: 1;
   height: pxtorem(2);
   background: #ccc;
   position: relative;
@@ -55,7 +66,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 5%;
+    width: 0%;
     .dot {
       width: pxtorem(6);
       height: pxtorem(6);
